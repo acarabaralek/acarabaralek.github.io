@@ -101,11 +101,87 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <audio id="backsound" autoplay loop>
+        <!-- BACKSOUND -->
+        <audio id="backsound" autoplay loop muted playsinline>
         <source src="assets/backsound.mp3" type="audio/mpeg">
         Browser kamu tidak mendukung audio.
         </audio>
 
-        <button onclick="document.getElementById('backsound').play()">🎵 Play Music</button>
+        <!-- Tombol Musik -->
+        <button id="music-btn" aria-label="Toggle Music">
+        <span id="music-icon">🔇</span>
+        </button>
+
+        <style>
+        /* Tombol Musik Emas Elegan */
+        #music-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 240, 0.2);
+        border: 2px solid rgba(212, 175, 55, 0.7);
+        border-radius: 50%;
+        padding: 15px;
+        cursor: pointer;
+        font-size: 22px;
+        backdrop-filter: blur(5px);
+        color: #d4af37;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        z-index: 9999;
+        animation: goldPulse 2s infinite;
+        }
+
+        #music-btn:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 240, 0.3);
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+        }
+
+        @keyframes goldPulse {
+        0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
+        100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        }
+        </style>
+
+        <script>
+        const backsound = document.getElementById('backsound');
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+
+        // Fungsi untuk unmute & play musik
+        function enableMusic() {
+        backsound.muted = false;
+        backsound.play()
+        .then(() => {
+        musicIcon.textContent = '🔊';
+        })
+        .catch(err => console.log('Autoplay diblokir:', err));
+        // Hapus listener setelah aktif
+        document.removeEventListener('click', enableMusic);
+        document.removeEventListener('touchstart', enableMusic);
+        document.removeEventListener('scroll', enableMusic);
+        }
+
+        // Aktifkan musik saat interaksi pertama (klik, sentuh, atau scroll)
+        document.addEventListener('click', enableMusic);
+        document.addEventListener('touchstart', enableMusic);
+        document.addEventListener('scroll', enableMusic);
+
+        // Toggle musik on/off
+        musicBtn.addEventListener('click', () => {
+        if (backsound.paused) {
+        backsound.play();
+        musicIcon.textContent = '🔊';
+        } else {
+        backsound.pause();
+        musicIcon.textContent = '🔇';
+        }
+        });
+        </script>
     </body>
 </html>
